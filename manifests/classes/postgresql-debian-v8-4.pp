@@ -15,7 +15,7 @@ class postgresql::debian::v8-4 {
   $version = "8.4"
 
   case $lsbdistcodename {
-    "lenny", "squeeze", "lucid" : {
+    "lenny", "squeeze", "lucid", "natty" : {
 
       include postgresql::debian::base
 

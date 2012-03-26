@@ -8,7 +8,7 @@ class postgresql::v8-4 {
     }
     Ubuntu: {
       case $lsbdistcodename {
-        lucid :  { include postgresql::debian::v8-4 }
+        lucid,natty :  { include postgresql::debian::v8-4 }
         default: { fail "postgresql 8.4 not available for ${operatingsystem}/${lsbdistcodename}"}
       }
     }

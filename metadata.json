@@ -11,26 +11,70 @@
     "Copyright": "33b63a32fac89bd69e018d548a687015",
     "Modulefile": "84e11c9b200bc4a085a1b54bb79180bd",
     "README": "d41d8cd98f00b204e9800998ecf8427e",
+    "Rakefile": "f752e5d3abdd3345f4ed603602c9a4bc",
     "files/pg_hba.aug": "fb7d253f2335607414dcce51f30ed5aa",
-    "manifests/classes/postgresql-administration.pp": "e0c2a463d38b5718352e9046168c004c",
-    "manifests/classes/postgresql-backup.pp": "fe16ba975c7b5a629a8085c602d4f14b",
-    "manifests/classes/postgresql-base.pp": "bc1a5950233db566c8eab7078f0632a6",
-    "manifests/classes/postgresql-debian-base.pp": "246e6c503c0d9da9448e54be897260d5",
-    "manifests/classes/postgresql-debian-v8-3.pp": "2efe98b2efa6a8650dc651c53217a1f5",
-    "manifests/classes/postgresql-debian-v8-4.pp": "28752f2def3e841c70c5fb19154735c3",
-    "manifests/classes/postgresql-debian-v9-0.pp": "7ab349d0c9600a3895c9f1cb80a51d40",
-    "manifests/classes/postgresql-params.pp": "76bbc3be07cbb8a7e76be96fc17022f2",
-    "manifests/definitions/postgresql-cluster.pp": "1ad463053552105963087b0fba872208",
-    "manifests/definitions/postgresql-database.pp": "033d1f4e4333c2f37723474f4a8e0606",
-    "manifests/definitions/postgresql-hba.pp": "2072ee96c23355caaaa1689fae78827b",
-    "manifests/definitions/postgresql-user.pp": "342e37225375872d693fde55b4d4405b",
-    "manifests/init.pp": "8356ad434ce5dd448dfa237b989ccd59",
+    "lib/puppet/provider/pgconf/parsed.rb": "4820fa37f4ebc24120f9b7d0bdf1b79c",
+    "lib/puppet/type/pgconf.rb": "32a0955bda260fbeac0edcabca3c236e",
+    "manifests/administration.pp": "e0c2a463d38b5718352e9046168c004c",
+    "manifests/backup.pp": "fe16ba975c7b5a629a8085c602d4f14b",
+    "manifests/base.pp": "6ddf1ab70a7f84afef167bfeed973383",
+    "manifests/client.pp": "e76f3a8d8a45754a2b559cd77acd82c2",
+    "manifests/cluster.pp": "1ad463053552105963087b0fba872208",
+    "manifests/conf.pp": "1f1f2fab46beea3f79fa1f414712be4d",
+    "manifests/database.pp": "033d1f4e4333c2f37723474f4a8e0606",
+    "manifests/debian/base.pp": "60f35689a3a389c8a68c7bfc6ac4b515",
+    "manifests/debian/v8-3.pp": "8537dce8f69dcbe52c7e57b5faf9abcf",
+    "manifests/debian/v8-4.pp": "55206d69b130952d22f947dae2dbcd48",
+    "manifests/debian/v9-0.pp": "ec77e84777d8c24f1facfa80e27be03c",
+    "manifests/hba.pp": "fc4345e4323fdd8a81d3cd5cde3519c3",
+    "manifests/init.pp": "3db337339b6d8adaaeb090fa06782973",
+    "manifests/params.pp": "76bbc3be07cbb8a7e76be96fc17022f2",
+    "manifests/user.pp": "342e37225375872d693fde55b4d4405b",
+    "manifests/v8-3.pp": "2818e3f45c9526584dcd7f4405254927",
+    "manifests/v8-4.pp": "9bf5e23d1983be8476fa60fec1b51d0d",
+    "manifests/v9-0.pp": "00855e9dfd0fd0fd35a7c4207e4c3272",
+    "spec/monkey_patches/alias_should_to_must.rb": "7cd4065c63f06f1ab3aaa1c5f92af947",
+    "spec/monkey_patches/publicize_methods.rb": "1b03a4af94f7dac35f7c2809caf372ca",
+    "spec/puppet_spec/files.rb": "25b4f9414346fad485986249bb2f0b10",
+    "spec/puppet_spec/fixtures.rb": "147446d18612c8395ac65be10b1cd9ab",
+    "spec/puppet_spec/matchers.rb": "8e77dc7317de7fc2ff289fb716623b6c",
+    "spec/puppet_spec/verbose.rb": "2e0e0e74f2c5ec0408d455e773755bf9",
     "spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
-    "spec/spec_helper.rb": "ca19ec4f451ebc7fdb035b52eae6e909",
-    "templates/pgsql-backup.sh.erb": "27e44161720090e3397ba5b777a2d951",
+    "spec/spec_helper.rb": "a456ece8d743190a1f411a682cd55933",
+    "spec/unit/provider/parsed_spec.rb": "de1a6f3282b5f8b46f6d66f9d9ee953b",
+    "spec/unit/type/pgconf_type_spec.rb": "666540bf056d7a9e0f9113398131a66a",
+    "templates/pgsql-backup.sh.erb": "cc16e78739b289b0f38120994aca5124",
     "templates/sudoers.postgresql.erb": "bf73ea3167110dcdb0bd9742a08986ae",
     "tests/init.pp": "c5c2dc703ef988a31150bd7a5e7c9d23"
   },
+  "types": [
+    {
+      "parameters": [
+        {
+          "name": "name",
+          "doc": "The postgresql parameter name to manage."
+        }
+      ],
+      "properties": [
+        {
+          "name": "value",
+          "doc": "The value to set for this parameter."
+        },
+        {
+          "name": "target",
+          "doc": "The path to postgresql.conf"
+        }
+      ],
+      "providers": [
+        {
+          "name": "parsed",
+          "doc": "Set key/values in postgresql.conf."
+        }
+      ],
+      "name": "pgconf",
+      "doc": "This type allows puppet to manage postgresql.conf parameters."
+    }
+  ],
   "dependencies": [
     {
       "name": "Analytical Labs/sudo",

@@ -84,8 +84,8 @@ define postgresql::user(
         exec { "Change password for postgres user $name":
           command => "psql ${connection} -c \"ALTER USER \\\"$name\\\" PASSWORD '$password' \"",
           user    => "postgres",
-          unless  => "TMPFILE=$(mktemp /tmp/.pgpass.XXXXXX) && echo '${host}:${port}:template1:${name}:${pgpass}' > \$TMPFILE && PGPASSFILE=\$TMPFILE psql -h ${host} -p ${port} -U ${name} -c '\\q' template1 && rm -f \$TMPFILE",
-          require => Exec["Create postgres user $name"],
+          onlyif  => "test $(TMPFILE=$(mktemp /tmp/.pgpass.XXXXXX) && echo '${host}:${port}:template1:${name}:${pgpass}' > \$TMPFILE && PGPASSFILE=\$TMPFILE psql -h ${host} -p ${port} -U ${name} -c '\\q' template1; VAL=\$?; rm -f \$TMPFILE; echo \$VAL) -ne 0",
+	  require => Exec["Create postgres user $name"],
         }
       }
 

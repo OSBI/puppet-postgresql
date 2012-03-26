@@ -1,10 +1,7 @@
 #!/bin/sh
 
-<% if has_variable?("postgresql_backupdir") -%>
-BKPDIR="<%= postgresql_backupdir %>"
-<% else -%>
-BKPDIR="/var/backups/pgsql/"
-<% end -%>
+BKPDIR="<%= has_variable?('postgresql_backupdir') ? postgresql_backupdir : '/var/backups/pgsql/' %>"
+BKPFMT="<%= has_variable?('postgresql_backupfmt') ? postgresql_backupfmt : 'plain' %>"
 TODAY=$(date +%F)
 DAY=$(date +%A |tr 'A-Z' 'a-z')
 MONTH=$(date +%B |tr 'A-Z' 'a-z')
@@ -15,7 +12,7 @@ pg_dumpall -U postgres --globals-only |bzip2 > $TMPDIR/ACCOUNT-OBJECTS.$TODAY.du
 
 for i in `psql -U postgres -c "select datname from pg_database where datname <> 'template0'" -t template1`
     do
-        pg_dump -U postgres -C $i |bzip2  > $TMPDIR/$i.$TODAY.dump.bz
+        pg_dump -U postgres --format=$BKPFMT --create $i |bzip2  > $TMPDIR/$i.$TODAY.dump.bz
     done
 
 test -f $BKPDIR/pgsql_$DAY.tar.gz && rm $BKPDIR/pgsql_$DAY.tar.gz

@@ -20,11 +20,16 @@ class postgresql::debian::v8-3 {
       include postgresql::debian::base
 
       service {"postgresql":
-        name      => "postgresql-8.3",
+        name      => "postgresql-${version}",
         ensure    => running,
         enable    => true,
         hasstatus => true,
         require   => Package["postgresql"],
+      }
+
+      exec { "reload postgresql ${version}":
+        refreshonly => true,
+        command     => "/etc/init.d/postgresql-${version} reload",
       }
 
     }

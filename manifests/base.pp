@@ -13,25 +13,13 @@ class postgresql::base {
     require => Package["postgresql"],
   }
 
-  package {"postgresql":
+  package { "postgresql":
+    name   => $operatingsystem ? {
+      /Debian|Ubuntu|kFreeBSD/ => "postgresql",
+      /RedHat|CentOS|Fedora/   => "postgresql-server",
+    },
     ensure => present,
     notify => undef,
-  }
-
-  case $operatingsystem {
-
-    /RedHat|CentOS/: {
-      case $lsbmajdistrelease {
-
-        "4","5": { }
-
-        default: {
-          package {"postgresql-server":
-            ensure => present,
-          }
-        }
-      }
-    }
   }
 
   # lens included upstream since augeas 0.7.4
@@ -42,7 +30,7 @@ class postgresql::base {
     ensure => $lens,
     mode   => 0644,
     owner  => "root",
-    source => "puppet:///postgresql/pg_hba.aug",
+    source => "puppet:///modules/postgresql/pg_hba.aug",
   }
 
 }

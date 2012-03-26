@@ -9,6 +9,7 @@ shared by the different flavors of Debian
 class postgresql::debian::base inherits postgresql::base {
 
   include postgresql::params
+  include postgresql::client
 
   Package["postgresql"] {
     name   => "postgresql-${version}",
@@ -16,10 +17,8 @@ class postgresql::debian::base inherits postgresql::base {
   }
 
   package {[
-    "libpq5",
     "postgresql-client-${version}",
     "postgresql-common",
-    "postgresql-client-common",
     "postgresql-contrib-${version}"
     ]:
     ensure  => present,

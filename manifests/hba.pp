@@ -93,7 +93,7 @@ define postgresql::hba (
         context => "/files/etc/postgresql/${pgver}/${clustername}/",
         changes => $changes,
         onlyif  => "match ${xpath} size == 0",
-        notify  => Service["postgresql"],
+        notify  => Exec["reload postgresql ${pgver}"],
         require => [Package["postgresql-${pgver}"], File["/usr/share/augeas/lenses/contrib/pg_hba.aug"]],
         load_path => $lpath,
       }
@@ -103,7 +103,7 @@ define postgresql::hba (
           context => "/files/etc/postgresql/${pgver}/${clustername}/",
           changes => "set ${xpath}/method/option ${option}",
           onlyif  => "match ${xpath}/method/option size == 0",
-          notify  => Service["postgresql"],
+          notify  => Exec["reload postgresql ${pgver}"],
           require => [Augeas["set pg_hba ${name}"], File["/usr/share/augeas/lenses/contrib/pg_hba.aug"]],
           load_path => $lpath,
         }
@@ -115,7 +115,7 @@ define postgresql::hba (
         context => "/files/etc/postgresql/${pgver}/${clustername}/",
         changes => "rm ${xpath}",
         onlyif  => "match ${xpath} size == 1",
-        notify  => Service["postgresql"],
+        notify  => Exec["reload postgresql ${pgver}"],
         require => [Package["postgresql-${pgver}"], File["/usr/share/augeas/lenses/contrib/pg_hba.aug"]],
         load_path => $lpath,
       }

@@ -27,7 +27,7 @@
     "manifests/debian/v8-4.pp": "55206d69b130952d22f947dae2dbcd48",
     "manifests/debian/v9-0.pp": "ec77e84777d8c24f1facfa80e27be03c",
     "manifests/hba.pp": "fc4345e4323fdd8a81d3cd5cde3519c3",
-    "manifests/init.pp": "3db337339b6d8adaaeb090fa06782973",
+    "manifests/init.pp": "72ce384630518c3091cf59e7927fb453",
     "manifests/params.pp": "76bbc3be07cbb8a7e76be96fc17022f2",
     "manifests/user.pp": "342e37225375872d693fde55b4d4405b",
     "manifests/v8-3.pp": "2818e3f45c9526584dcd7f4405254927",

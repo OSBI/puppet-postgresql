@@ -29,7 +29,7 @@
     "manifests/hba.pp": "fc4345e4323fdd8a81d3cd5cde3519c3",
     "manifests/init.pp": "72ce384630518c3091cf59e7927fb453",
     "manifests/params.pp": "76bbc3be07cbb8a7e76be96fc17022f2",
-    "manifests/user.pp": "342e37225375872d693fde55b4d4405b",
+    "manifests/user.pp": "47f7625a1b06ef26ad25a0ede24c5f74",
     "manifests/v8-3.pp": "2818e3f45c9526584dcd7f4405254927",
     "manifests/v8-4.pp": "9bf5e23d1983be8476fa60fec1b51d0d",
     "manifests/v9-0.pp": "00855e9dfd0fd0fd35a7c4207e4c3272",

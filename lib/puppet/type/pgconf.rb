@@ -12,7 +12,7 @@ module Puppet
       newvalues(/^\w+$/)
     end
 
-    newproperty(:value) do
+    newproperty(':value') do
       desc "The value to set for this parameter."
     end
 

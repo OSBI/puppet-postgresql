@@ -22,7 +22,7 @@
     "manifests/cluster.pp": "1ad463053552105963087b0fba872208",
     "manifests/conf.pp": "1f1f2fab46beea3f79fa1f414712be4d",
     "manifests/database.pp": "033d1f4e4333c2f37723474f4a8e0606",
-    "manifests/debian/base.pp": "60f35689a3a389c8a68c7bfc6ac4b515",
+    "manifests/debian/base.pp": "59c3aa7cd3ceb43013fa11148ae239c6",
     "manifests/debian/v8-3.pp": "8537dce8f69dcbe52c7e57b5faf9abcf",
     "manifests/debian/v8-4.pp": "55206d69b130952d22f947dae2dbcd48",
     "manifests/debian/v9-0.pp": "ec77e84777d8c24f1facfa80e27be03c",

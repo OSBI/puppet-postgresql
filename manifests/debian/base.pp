@@ -31,6 +31,7 @@ class postgresql::debian::base inherits postgresql::base {
     timeout     => 60,
     environment => "PWD=/",
     before      => Postgresql::Cluster["main"],
+    require     => Package["postgresql"],
   }
   
   postgresql::cluster {"main":

@@ -23,14 +23,12 @@ class postgresql::base {
   }
 
   # lens included upstream since augeas 0.7.4
-  if versioncmp($augeasversion, '0.7.3') < 0 { $lens = present }
-  else { $lens = absent }
+  if versioncmp($augeasversion, '0.7.3') < 0 { $lens_ensure = present }
+  else { $lens_ensure = absent }
 
-  file { "/usr/share/augeas/lenses/contrib/pg_hba.aug":
-    ensure => $lens,
-    mode   => 0644,
-    owner  => "root",
-    source => "puppet:///modules/postgresql/pg_hba.aug",
+  augeas::lens { 'pg_hba':
+    ensure      => $lens_ensure,
+    lens_source => 'puppet:///modules/postgresql/pg_hba.aug',
   }
 
 }

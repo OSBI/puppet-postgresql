@@ -41,5 +41,19 @@ class postgresql::debian::base inherits postgresql::base {
     data_dir    => "${postgresql::params::data_dir}",
     require     => [Package["postgresql"], Exec["drop initial cluster"]],
   }
-  
+
+  Postgresql::Conf {
+    pgver  => $version,
+    before => Exec["drop initial cluster"],
+  }
+
+  # A few default postgresql settings without which pg_dropcluster can't run.
+  postgresql::conf {
+    'data_directory':        value => "/var/lib/postgresql/${version}/main";
+    'hba_file':              value => "/etc/postgresql/${version}/main/pg_hba.conf";
+    'ident_file':            value => "/etc/postgresql/${version}/main/pg_ident.conf";
+    'external_pid_file':     value => "/var/run/postgresql/${version}-main.pid";
+    'unix_socket_directory': value => '/var/run/postgresql';
+  }
+
 }

@@ -62,9 +62,10 @@ define postgresql::conf ($ensure='present', $value=undef, $clustername='main', $
 
     /present|absent/: {
       pgconf { $name:
-        ensure => $ensure,
-        target => $target,
-        value  => $value,
+        ensure  => $ensure,
+        target  => $target,
+        value   => $value,
+        require => Package["postgresql-${pgver}"],
       }
     }
 

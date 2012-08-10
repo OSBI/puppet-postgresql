@@ -81,10 +81,7 @@ define postgresql::hba (
   }
 
   if versioncmp($augeasversion, '0.7.3') < 0 {
-    $lpath = "/usr/share/augeas/lenses/contrib/"
-    Augeas {
-      require => File["${lpath}/pg_hba.aug"],
-    }
+    $lpath = "/usr/share/augeas/lenses/contrib"
   } else {
     $lpath = undef
   }
@@ -97,7 +94,10 @@ define postgresql::hba (
         changes => $changes,
         onlyif  => "match ${xpath} size == 0",
         notify  => Exec["reload postgresql ${pgver}"],
-        require +> Package["postgresql-${pgver}"],
+        require => $lpath ? {
+          undef   => Package["postgresql-${pgver}"],
+          default => [Package["postgresql-${pgver}"], File["${lpath}/pg_hba.aug"]],
+        },
         load_path => $lpath,
       }
 
@@ -107,7 +107,10 @@ define postgresql::hba (
           changes => "set ${xpath}/method/option ${option}",
           onlyif  => "match ${xpath}/method/option size == 0",
           notify  => Exec["reload postgresql ${pgver}"],
-          require +> Augeas["set pg_hba ${name}"],
+          require => $lpath ? {
+            undef   => Augeas["set pg_hba ${name}"],
+            default => [Augeas["set pg_hba ${name}"], File["${lpath}/pg_hba.aug"]],
+          },
           load_path => $lpath,
         }
       }
@@ -119,7 +122,10 @@ define postgresql::hba (
         changes => "rm ${xpath}",
         onlyif  => "match ${xpath} size == 1",
         notify  => Exec["reload postgresql ${pgver}"],
-        require +> Package["postgresql-${pgver}"],
+        require => $lpath ? {
+          undef   => Package["postgresql-${pgver}"],
+          default => [Package["postgresql-${pgver}"], File["${lpath}/pg_hba.aug"]],
+        },
         load_path => $lpath,
       }
     }

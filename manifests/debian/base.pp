@@ -2,7 +2,7 @@
 
 ==Class: postgresql::debian::base
 
-This class is dedicated to the common parts 
+This class is dedicated to the common parts
 shared by the different flavors of Debian
 
 */
@@ -32,7 +32,7 @@ class postgresql::debian::base inherits postgresql::base {
     environment => "PWD=/",
     before      => Postgresql::Cluster["main"],
   }
-  
+
   postgresql::cluster {"main":
     ensure      => present,
     clustername => "main",
@@ -54,6 +54,7 @@ class postgresql::debian::base inherits postgresql::base {
     'ident_file':            value => "/etc/postgresql/${version}/main/pg_ident.conf";
     'external_pid_file':     value => "/var/run/postgresql/${version}-main.pid";
     'unix_socket_directory': value => '/var/run/postgresql';
+    'ssl':                   value => 'true';
   }
 
 }

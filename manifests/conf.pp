@@ -6,8 +6,9 @@ postgresql each time a change is made to postgresql.conf using this definition.
 
 Parameters:
 - *ensure*: present/absent, default to present.
-- *value*: database name or "all", mandatory.
-- *clustername*: cluster name of postgresql to which this configuration applies to. Defaults to 'main'.
+- *value*: value of this configuration parameter.
+- *clustername*: cluster name of postgresql to which this configuration applies
+  to. Defaults to 'main'.
 - *pgver*: version of postgresql to which this configuration applies to
   (/etc/postgresql/${pgver}/${clustername}/postgresql.conf).
 

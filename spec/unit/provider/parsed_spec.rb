@@ -73,10 +73,11 @@ describe provider_class do
       @provider.parse_line(" ")[:record_type].should == :blank
     end
 
-    it "should (not) handle 'include' special keyword" do
-      provider = @provider.parse_line("include 'filename'")
-      provider[:record_type].should == :blank
-      provider[:line].should == "include 'filename'"
+    it "should handle 'include' special keyword" do
+      provider = @provider.parse_line("Include 'site.conf'")
+      provider[:record_type].should == :parsed
+      provider[:name].should == 'include'
+      provider[:value].should == 'site.conf'
     end
 
   end
@@ -177,6 +178,15 @@ describe provider_class do
         :ensure => 'present'
       )
       genpgconf(pgconf).should == "default_text_search_config = 'pg_catalog.english'\n"
+    end
+
+    it "should create an entry without = if special include directive" do
+      pgconf = mkpgconf(
+        :name   => 'include',
+        :value  => 'site.conf',
+        :ensure => 'present'
+      )
+      genpgconf(pgconf).should == "include 'site.conf'\n"
     end
 
   end

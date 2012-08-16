@@ -49,7 +49,7 @@ class postgresql::debian::base inherits postgresql::base {
 
   # A few default postgresql settings without which pg_dropcluster can't run.
   postgresql::conf {
-    'data_directory':        value => "/var/lib/postgresql/${version}/main";
+    'data_directory':        value => "${postgresql::params::data_dir}/${version}/main";
     'hba_file':              value => "/etc/postgresql/${version}/main/pg_hba.conf";
     'ident_file':            value => "/etc/postgresql/${version}/main/pg_ident.conf";
     'external_pid_file':     value => "/var/run/postgresql/${version}-main.pid";

@@ -16,6 +16,10 @@ class postgresql::debian::base inherits postgresql::base {
     notify => Exec["drop initial cluster"],
   }
 
+  User["postgres"] {
+    groups => ['ssl-cert'],
+  }
+
   package {[
     "postgresql-client-${version}",
     "postgresql-common",

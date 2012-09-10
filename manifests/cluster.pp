@@ -26,6 +26,16 @@ define postgresql::cluster (
         require => [Package["postgresql"], User["postgres"]],
       }
 
+      file {"${data_dir}/${version}/${clustername}/server.key":
+        ensure => link,
+        target => '/etc/ssl/private/ssl-cert-snakeoil.key',
+      }
+
+      file {"${data_dir}/${version}/${clustername}/server.crt":
+        ensure => link,
+        target => '/etc/ssl/certs/ssl-cert-snakeoil.pem',
+      }
+
       exec {"pg_createcluster --start -e $encoding -u $uid -g $gid -d ${data_dir}/${version}/${clustername} $version $clustername":
         unless  => "pg_lsclusters -h | awk '{ print \$1,\$2; }' | egrep '^${version} ${clustername}\$'",
         require => File[$data_dir],

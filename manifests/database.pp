@@ -26,7 +26,7 @@ define postgresql::database(
   case $ensure {
     present: {
       exec { "Create $name postgres db":
-        command => "/usr/bin/createdb $ownerstring $encodingstring $name -T $template",
+        command => "createdb $ownerstring $encodingstring $name -T $template",
         user    => "postgres",
         unless  => "test \$(psql -tA -c \"SELECT count(*)=1 FROM pg_catalog.pg_database where datname='${name}';\") = t",
         require => Postgresql::Cluster["main"],
@@ -34,7 +34,7 @@ define postgresql::database(
     }
     absent:  {
       exec { "Remove $name postgres db":
-        command => "/usr/bin/dropdb $name",
+        command => "dropdb $name",
         user    => "postgres",
         onlyif  => "test \$(psql -tA -c \"SELECT count(*)=1 FROM pg_catalog.pg_database where datname='${name}';\") = t",
         require => Postgresql::Cluster["main"],
@@ -49,7 +49,7 @@ define postgresql::database(
   if $overwrite {
     exec { "Drop database $name before import":
       command => "dropdb ${name}",
-      onlyif  => "/usr/bin/psql -l | grep '$name  *|'",
+      onlyif  => "psql -l | grep '$name  *|'",
       user    => "postgres",
       before  => Exec["Create $name postgres db"],
       require => Postgresql::Cluster["main"],
@@ -60,7 +60,7 @@ define postgresql::database(
   if $source {
     # TODO: handle non-gziped files
     exec { "Import dump into $name postgres db":
-      command => "zcat ${source} | psql ${name}",
+      command => "zcat -f ${source} | psql ${name}",
       user    => "postgres",
       onlyif  => "test $(psql ${name} -c '\\dt' | wc -l) -eq 1",
       require => Exec["Create $name postgres db"],

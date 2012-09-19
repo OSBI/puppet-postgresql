@@ -78,11 +78,11 @@
   "dependencies": [
     {
       "name": "Analytical Labs/sudo",
-      "versionRequirement": "\u003d\u003d1.0"
+      "version_requirement": "\u003d\u003d1.0"
     },
     {
       "name": "Analytical Labs/apt",
-      "versionRequirement": "\u003d\u003d1.0"
+      "version_requirement": "\u003d\u003d1.0"
     }
   ]
 }

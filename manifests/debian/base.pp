@@ -2,7 +2,7 @@
 
 ==Class: postgresql::debian::base
 
-This class is dedicated to the common parts 
+This class is dedicated to the common parts
 shared by the different flavors of Debian
 
 */
@@ -14,6 +14,10 @@ class postgresql::debian::base inherits postgresql::base {
   Package["postgresql"] {
     name   => "postgresql-${version}",
     notify => Exec["drop initial cluster"],
+  }
+
+  User["postgres"] {
+    groups => ['ssl-cert'],
   }
 
   package {[
@@ -33,7 +37,7 @@ class postgresql::debian::base inherits postgresql::base {
     before      => Postgresql::Cluster["main"],
     require     => Package["postgresql"],
   }
-  
+
   postgresql::cluster {"main":
     ensure      => present,
     clustername => "main",
@@ -42,5 +46,20 @@ class postgresql::debian::base inherits postgresql::base {
     data_dir    => "${postgresql::params::data_dir}",
     require     => [Package["postgresql"], Exec["drop initial cluster"]],
   }
-  
+
+  Postgresql::Conf {
+    pgver  => $version,
+    before => Exec["drop initial cluster"],
+  }
+
+  # A few default postgresql settings without which pg_dropcluster can't run.
+  postgresql::conf {
+    'data_directory':        value => "${postgresql::params::data_dir}/${version}/main";
+    'hba_file':              value => "/etc/postgresql/${version}/main/pg_hba.conf";
+    'ident_file':            value => "/etc/postgresql/${version}/main/pg_ident.conf";
+    'external_pid_file':     value => "/var/run/postgresql/${version}-main.pid";
+    'unix_socket_directory': value => '/var/run/postgresql';
+    'ssl':                   value => 'true';
+  }
+
 }

@@ -9,7 +9,7 @@ Puppet::Type.type(:pgconf).provide(
   desc "Set key/values in postgresql.conf."
 
   text_line :comment, :match => /^\s*#/
-  text_line :blank, :match => /^\s*(include|$)/ # include keyword handled as a blank line
+  text_line :blank, :match => /^\s*$/
 
   record_line :parsed,
     :fields   => %w{name value crap comment},
@@ -19,9 +19,10 @@ Puppet::Type.type(:pgconf).provide(
 
       # simple string and numeric values don't need to be enclosed in quotes
       dontneedquote = h[:value].match(/^(\w+|[0-9.-]+)$/)
+      dontneedequal = h[:name].match(/^include$/i)
 
       str =  h[:name].downcase # normalize case
-      str += ' = '
+      str += dontneedequal ? ' ' : ' = '
       str += "'" unless dontneedquote
       str += h[:value]
       str += "'" unless dontneedquote

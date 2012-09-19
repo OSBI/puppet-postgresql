@@ -9,10 +9,10 @@ define postgresql::cluster (
   $ensure,
   $clustername,
   $version,
-  $encoding="UTF8",
-  $uid="postgres",
-  $gid="postgres",
-  $data_dir="/var/lib/postgresql"
+  $encoding='UTF8',
+  $uid='postgres',
+  $gid='postgres',
+  $data_dir='/var/lib/postgresql'
 ) {
 
   case $ensure {
@@ -20,13 +20,23 @@ define postgresql::cluster (
 
       file {$data_dir:
         ensure  => directory,
-        owner   => "postgres",
-        group   => "postgres",
-        mode    => 755,
-        require => [Package["postgresql"], User["postgres"]],
+        owner   => 'postgres',
+        group   => 'postgres',
+        mode    => '0755',
+        require => [Package['postgresql'], User['postgres']],
       }
 
-      exec {"pg_createcluster --start -e $encoding -u $uid -g $gid -d ${data_dir}/${version}/${clustername} $version $clustername":
+      file {"${data_dir}/${version}/${clustername}/server.key":
+        ensure => link,
+        target => '/etc/ssl/private/ssl-cert-snakeoil.key',
+      }
+
+      file {"${data_dir}/${version}/${clustername}/server.crt":
+        ensure => link,
+        target => '/etc/ssl/certs/ssl-cert-snakeoil.pem',
+      }
+
+      exec {"pg_createcluster --start -e ${encoding} -u ${uid} -g ${gid} -d ${data_dir}/${version}/${clustername} ${version} ${clustername}":
         unless  => "pg_lsclusters -h | awk '{ print \$1,\$2; }' | egrep '^${version} ${clustername}\$'",
         require => File[$data_dir],
       }
@@ -34,10 +44,12 @@ define postgresql::cluster (
     }
 
     absent: {
-      exec {"pg_dropcluster --stop $version $clustername":
+      exec {"pg_dropcluster --stop ${version} ${clustername}":
         onlyif  => "pg_lsclusters -h | awk '{ print \$1,\$2,\$6; }' | egrep '^${version} ${clustername} ${data_dir}/${version}/${clustername}\$'",
-        require => Service["postgresql"],
+        require => Service['postgresql'],
       }
     }
+
+    default: { fail "Unknown ${ensure} value for ensure" }
   }
 }

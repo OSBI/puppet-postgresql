@@ -97,8 +97,8 @@ define postgresql::hba (
         onlyif  => "match ${xpath} size == 0",
         notify  => Exec["reload postgresql ${pgver}"],
         require => $require_lens ? {
-          false => Package["postgresql-${pgver}"],
-          true  => [Package["postgresql-${pgver}"], File["${lpath}/pg_hba.aug"]],
+          false => Package["postgresql"],
+          true  => [Package["postgresql"], File["${lpath}/pg_hba.aug"]],
         },
         load_path => $lpath,
       }
@@ -125,8 +125,8 @@ define postgresql::hba (
         onlyif  => "match ${xpath} size == 1",
         notify  => Exec["reload postgresql ${pgver}"],
         require => $require_lens ? {
-          false => Package["postgresql-${pgver}"],
-          true  => [Package["postgresql-${pgver}"], File["${lpath}/pg_hba.aug"]],
+          false => Package["postgresql"],
+          true  => [Package["postgresql"], File["${lpath}/pg_hba.aug"]],
         },
         load_path => $lpath,
       }

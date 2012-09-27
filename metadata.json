@@ -32,7 +32,7 @@
     "manifests/init.pp": "9f0851f47b856df576fd40cc75acefdd",
     "manifests/params.pp": "76bbc3be07cbb8a7e76be96fc17022f2",
     "manifests/ubuntu/v9-1.pp": "dc0160fe1c2c663d388c80a38dd3d87c",
-    "manifests/user.pp": "593c28d837236af06980970340f229cb",
+    "manifests/user.pp": "e0694fecf6e7b7f507b962230156c8d8",
     "manifests/v8-3.pp": "2818e3f45c9526584dcd7f4405254927",
     "manifests/v8-4.pp": "9bf5e23d1983be8476fa60fec1b51d0d",
     "manifests/v9-0.pp": "00855e9dfd0fd0fd35a7c4207e4c3272",

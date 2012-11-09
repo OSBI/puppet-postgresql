@@ -18,7 +18,7 @@
     "lib/puppet/type/pgconf.rb": "32a0955bda260fbeac0edcabca3c236e",
     "manifests/administration.pp": "e0c2a463d38b5718352e9046168c004c",
     "manifests/backup.pp": "fe16ba975c7b5a629a8085c602d4f14b",
-    "manifests/base.pp": "c0c17500fd59164ab93bedc2d40aba25",
+    "manifests/base.pp": "475f3f43744813592536f6ddff3456dd",
     "manifests/client.pp": "e76f3a8d8a45754a2b559cd77acd82c2",
     "manifests/cluster.pp": "1140ac78e7d4627cbaef71d8740027d9",
     "manifests/conf.pp": "c3b14f5c36c027a3408cc425f6dfae99",

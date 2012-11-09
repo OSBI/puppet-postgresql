@@ -6,47 +6,57 @@ Create a new PostgreSQL cluster
 
 */
 define postgresql::cluster (
-  $ensure,
-  $clustername,
   $version,
-  $encoding='UTF8',
-  $uid='postgres',
-  $gid='postgres',
-  $data_dir='/var/lib/postgresql'
+  $ensure   = 'present',
+  $encoding = 'UTF8'
 ) {
+
+  include postgresql::params
 
   case $ensure {
     present: {
 
-      file {$data_dir:
-        ensure  => directory,
-        owner   => 'postgres',
-        group   => 'postgres',
-        mode    => '0755',
-        require => [Package['postgresql'], User['postgres']],
-      }
+      case $::operatingsystem {
+        Debian,Ubuntu: {
+          file {"${postgresql::params::base_dir}/${version}/${name}/server.key":
+            ensure  => link,
+            target  => '/etc/ssl/private/ssl-cert-snakeoil.key',
+            require => Exec["pg_createcluster_${version}_${name}"],
+          }
 
-      file {"${data_dir}/${version}/${clustername}/server.key":
-        ensure => link,
-        target => '/etc/ssl/private/ssl-cert-snakeoil.key',
-      }
+          file {"${postgresql::params::base_dir}/${version}/${name}/server.crt":
+            ensure  => link,
+            target  => '/etc/ssl/certs/ssl-cert-snakeoil.pem',
+            require => Exec["pg_createcluster_${version}_${name}"],
+          }
 
-      file {"${data_dir}/${version}/${clustername}/server.crt":
-        ensure => link,
-        target => '/etc/ssl/certs/ssl-cert-snakeoil.pem',
-      }
-
-      exec {"pg_createcluster --start -e ${encoding} -u ${uid} -g ${gid} -d ${data_dir}/${version}/${clustername} ${version} ${clustername}":
-        unless  => "pg_lsclusters -h | awk '{ print \$1,\$2; }' | egrep '^${version} ${clustername}\$'",
-        require => File[$data_dir],
+          exec {"pg_createcluster_${version}_${name}":
+            command => "pg_createcluster --start -e ${encoding} -u postgres -g postgres -d ${postgresql::params::base_dir}/${version}/${name} ${version} ${name}",
+            unless  => "pg_lsclusters -h | awk '{ print \$1,\$2; }' | egrep '^${version} ${name}\$'",
+            require => File[$postgresql::params::base_dir],
+          }
+        }
+        Redhat,CentOS: {
+          exec {"pg_createcluster_${version}_${name}":
+            command => "initdb --pgdata='${postgresql::params::base_dir}/${name}' --encoding='${encoding}' --auth='ident'",
+            user    => 'postgres',
+            unless  => "/usr/bin/test -f ${postgresql::params::base_dir}/${name}/PG_VERSION",
+            require => File[$postgresql::params::base_dir],
+          }
+        }
       }
 
     }
 
     absent: {
-      exec {"pg_dropcluster --stop ${version} ${clustername}":
-        onlyif  => "pg_lsclusters -h | awk '{ print \$1,\$2,\$6; }' | egrep '^${version} ${clustername} ${data_dir}/${version}/${clustername}\$'",
-        require => Service['postgresql'],
+      case $::operatingsystem {
+        Debian,Ubuntu: {
+          exec {"pg_dropcluster --stop ${version} ${name}":
+            onlyif  => "pg_lsclusters -h | awk '{ print \$1,\$2,\$6; }' | egrep '^${version} ${name} ${postgresql::params::base_dir}/${version}/${name}\$'",
+            require => Service['postgresql'],
+          }
+        }
+        default: { fail 'not yet implemented!' }
       }
     }
 

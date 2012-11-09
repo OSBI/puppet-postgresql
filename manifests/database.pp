@@ -13,6 +13,8 @@ define postgresql::database(
   $source=false,
   $overwrite=false) {
 
+  include postgresql::params
+
   $ownerstring = $owner ? {
     false   => "",
     default => "-O $owner"
@@ -29,7 +31,7 @@ define postgresql::database(
         command => "createdb $ownerstring $encodingstring $name -T $template",
         user    => "postgres",
         unless  => "test \$(psql -tA -c \"SELECT count(*)=1 FROM pg_catalog.pg_database where datname='${name}';\") = t",
-        require => Postgresql::Cluster["main"],
+        require => Postgresql::Cluster[$postgresql::params::cluster_name],
       }
     }
     absent:  {
@@ -37,7 +39,7 @@ define postgresql::database(
         command => "dropdb $name",
         user    => "postgres",
         onlyif  => "test \$(psql -tA -c \"SELECT count(*)=1 FROM pg_catalog.pg_database where datname='${name}';\") = t",
-        require => Postgresql::Cluster["main"],
+        require => Postgresql::Cluster[$postgresql::params::cluster_name],
       }
     }
     default: {
@@ -52,7 +54,7 @@ define postgresql::database(
       onlyif  => "psql -l | grep '$name  *|'",
       user    => "postgres",
       before  => Exec["Create $name postgres db"],
-      require => Postgresql::Cluster["main"],
+      require => Postgresql::Cluster[$postgresql::params::cluster_name],
     }
   }
 

@@ -7,10 +7,7 @@ postgresql each time a change is made to postgresql.conf using this definition.
 Parameters:
 - *ensure*: present/absent, default to present.
 - *value*: value of this configuration parameter.
-- *clustername*: cluster name of postgresql to which this configuration applies
-  to. Defaults to 'main'.
-- *pgver*: version of postgresql to which this configuration applies to
-  (/etc/postgresql/${pgver}/${clustername}/postgresql.conf).
+- *path*: path of the configuration file
 
 This is just a wrapper around the pgconf type, in case one day we prefer to use
 augeas or Exec[sed] ;-)
@@ -19,11 +16,6 @@ See also:
 http://www.postgresql.org/docs/current/static/config-setting.html
 
 Example usage:
-
-  Postgresql::Conf {
-    pgver       => '8.4',
-    clustername => 'main',
-  }
 
   postgresql::conf { "shared_buffers":
     value => '128MB',
@@ -34,13 +26,14 @@ Example usage:
   }
 
 */
-define postgresql::conf ($ensure='present', $value=undef, $clustername='main', $pgver) {
+define postgresql::conf ($ensure='present', $value=undef, $path=false) {
 
-  $target = $operatingsystem ? {
-    /Debian|Ubuntu|kFreeBSD/ => "/etc/postgresql/${pgver}/${clustername}/postgresql.conf",
-    default => fail("Implementation for '$operatingsystem' is missing, please send a patch !"),
+  include postgresql::params
+
+  $target = $path ? {
+    false   => $postgresql::params::postgresql_conf_path,
+    default => $path,
   }
-
 
   case $name {
 
@@ -52,7 +45,7 @@ define postgresql::conf ($ensure='present', $value=undef, $clustername='main', $
 
     default: {
       Pgconf {
-        notify => Exec["reload postgresql ${pgver}"],
+        notify => Exec['reload_postgresql'],
       }
     }
 
@@ -66,7 +59,7 @@ define postgresql::conf ($ensure='present', $value=undef, $clustername='main', $
         ensure  => $ensure,
         target  => $target,
         value   => $value,
-        require => Package["postgresql-${pgver}"],
+        require => Package['postgresql'],
       }
     }
 

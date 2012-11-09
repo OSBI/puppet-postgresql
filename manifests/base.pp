@@ -30,8 +30,21 @@ class postgresql::base {
     group   => 'postgres',
     mode    => undef,
     require => [Package['postgresql'], User['postgres']],
+  }->
+  file {"$postgresql::params::base_dir/9.1":
+    ensure  => directory,
+    owner   => 'postgres',
+    group   => 'postgres',
+    mode    => undef,
+    require => [Package['postgresql'], User['postgres']],
+  }->
+  file {"$postgresql::params::base_dir/9.1/main":
+    ensure  => directory,
+    owner   => 'postgres',
+    group   => 'postgres',
+    mode    => undef,
+    require => [Package['postgresql'], User['postgres']],
   }
-
   # lens included upstream since augeas 0.7.4
   if versioncmp($augeasversion, '0.7.3') < 0 { $lens_ensure = present }
   else { $lens_ensure = absent }

@@ -84,11 +84,10 @@ define postgresql::user(
 
         # change only if it's not the same password
         exec { "Change password for postgres user $name":
-          command => "/usr/local/sbin/pp-postgresql-user.sh '${connection}' setpwd '${name}' '${pgpass}' && echo '${pgpass}' > /root/.pgpassword",
+          command => "/usr/local/sbin/pp-postgresql-user.sh '${connection}' setpwd '${name}' '$pgpass'",
           user    => "postgres",
           unless  => "/usr/local/sbin/pp-postgresql-user.sh '-h ${host} -p ${port} -U ${name}' checkpwd '${host}:${port}:template1:${name}:${pgpass}'",
           require => Exec["Create postgres user $name"],
-          creates => "/root/.pgpassword"
         }
       }
 

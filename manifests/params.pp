@@ -1,5 +1,5 @@
 class postgresql::params {
-
+  $postgresql_base_dir = "/mnt/postgresql"
   case $postgresql_version {
     '': {
       case $::operatingsystem {
